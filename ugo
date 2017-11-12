@@ -1,0 +1,15 @@
+#!/bin/bash
+
+case "$1" in
+  build)
+    ./bin/build_all
+    ;;
+  test)
+    ./bin/test_all
+    ;;
+  script)
+    ./bin/script_all "$2"
+    ;;
+  *)
+    echo "Usage: $0 {build|test}"
+esac
