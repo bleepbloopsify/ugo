@@ -8,7 +8,7 @@ cd "${0%/*}"/../test/
 for D in */;
 do
   cd $D;
-  go build;
+  make;
   cd ..;
 done
 

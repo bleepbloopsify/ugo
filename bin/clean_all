@@ -2,13 +2,13 @@
 
 rbp=`pwd`
 
-script=`greadlink -f $1`
 cd "${0%/*}"/../test/
+
 
 for D in */;
 do
   cd $D;
-  ida64 -Llog -A -S$script `find ./ -type f -perm 755`
+  rm log output
   cd ..
 done
 

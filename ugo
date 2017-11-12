@@ -7,9 +7,10 @@ case "$1" in
   test)
     ./bin/test_all
     ;;
-  script)
+  scripts)
+    ./bin/clean_all
     ./bin/script_all "$2"
     ;;
   *)
-    echo "Usage: $0 {build|test}"
+    echo "Usage: $0 {build|test} | scripts [script name]"
 esac
