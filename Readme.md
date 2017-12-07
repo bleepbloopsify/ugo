@@ -14,3 +14,12 @@ development environment.
 * go(1.8.3 >) - this is version at dev
 
 https://www.hex-rays.com/products/ida/support/idadoc/417.shtml
+
+Hexrays doesnt understand what go is doing.
+
+- feed hex-rays more information
+- type inferencing
+
+- goUtils already does \_\_interface\_\_ replacement
+
+set size of int to 4
