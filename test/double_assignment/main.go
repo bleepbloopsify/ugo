@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
-func returnTwo(s string) (string, string) {
-	return s, strings.Join([]string{s, s}, ",")
+func returnThree(a int) (int, int, int) {
+	return a * a, a * a * a, a * 12
 }
 
 func main() {
-	_, s := returnTwo("yeet")
+	squared, cubed, _ := returnThree(2)
 
-	fmt.Println(s)
+	fmt.Println(squared)
+	fmt.Println(cubed)
 }
