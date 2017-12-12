@@ -31,7 +31,7 @@ class hexrays_callback_info(object):
 
         except:
             traceback.print_exc()
-            
+
         return 0
 
 def main():
