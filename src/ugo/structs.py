@@ -20,20 +20,6 @@ size_to_flag = {
 
 # the point of this function is to make logical argument order and
 # also provide defaults.
-def add_struct(name, index=-1, is_union=0):
-    return AddStrucEx(index, name, is_union)
-
-def add_struct_member(struct_id, field_name, field_size=8, flags=0, field_index=-1, metadata=-1):
-    """
-    @param metadata: this is the flagid in the old AddStrucMember function. I didn't like the name
-    """
-    # this is to tell IDA what to label the field
-    # we use the size_to_flag dict if no flags are specified, otherwise you
-    # are expected to also provide that flag
-    # FF_DATA flag is required
-    flag = (FF_DATA | flags if flags else size_to_flag[field_size]) & 0xFFFFFFFF
-    return AddStrucMember(struct_id, field_name, field_index, flag, metadata, field_size)
-
 """
 Define a new structure type
 
@@ -53,8 +39,13 @@ Define a new structure type
          bad structure name: the name is ill-formed or is
          already used in the program.
          otherwise returns ID of the new structure type
+
+EXAMPLE
 # sid = AddStrucEx(-1, name, 0) # go doesn't *really* use unions
 """
+def add_struct(name, index=-1, is_union=0):
+    return AddStrucEx(index, name, is_union)
+
 """
 Add structure member
 
@@ -83,8 +74,46 @@ Add structure member
 
 @return: 0 - ok, otherwise error code (one of STRUC_ERROR_*)
 
+EXAMPLE
 flag = (FF_DATA | size_to_flag[field.size]) & 0xFFFFFFFF
 # This is to tell IDA what to label the field
 
+err = AddStrucMember(sid, name, offset, flag, typeid, nbytes, target=-1, tdelta=0, reftype=REF_OFF32)
 err = AddStrucMember(sid, field.name, -1, flag, -1, field.size)
+"""
+def add_struct_member(struct_id, field_name, field_size=8, flags=0, field_index=-1, metadata=-1,
+            target=-1, tdelta=0, reftype=REF_OFF64):
+    """
+    @param metadata: this is the flagid in the old AddStrucMember function. I didn't like the name
+    """
+    # this is to tell IDA what to label the field
+    # we use the size_to_flag dict if no flags are specified, otherwise you
+    # are expected to also provide that flag
+    # FF_DATA flag is required
+    flag = (FF_DATA | flags if flags else size_to_flag[field_size]) & 0xFFFFFFFF
+    return AddStrucMember(struct_id, field_name, field_index, flag, metadata, field_size, target, tdelta, reftype)
+
+"""
+REF_OFF8    = idaapi.REF_OFF8    # 8bit full offset
+REF_OFF16   = idaapi.REF_OFF16   # 16bit full offset
+REF_OFF32   = idaapi.REF_OFF32   # 32bit full offset
+REF_LOW8    = idaapi.REF_LOW8    # low 8bits of 16bit offset
+REF_LOW16   = idaapi.REF_LOW16   # low 16bits of 32bit offset
+REF_HIGH8   = idaapi.REF_HIGH8   # high 8bits of 16bit offset
+REF_HIGH16  = idaapi.REF_HIGH16  # high 16bits of 32bit offset
+REF_VHIGH   = idaapi.REF_VHIGH   # high ph.high_fixup_bits of 32bit offset (processor dependent)
+REF_VLOW    = idaapi.REF_VLOW    # low  (32-ph.high_fixup_bits) of 32bit offset (processor dependent)
+REF_OFF64   = idaapi.REF_OFF64   # 64bit full offset
+REFINFO_RVA     = 0x10 # based reference (rva)
+REFINFO_PASTEND = 0x20 # reference past an item it may point to an nonexistitng
+                       # do not destroy alignment dirs
+REFINFO_NOBASE  = 0x80 # offset base is a number
+                       # that base have be any value
+                       # nb: base xrefs are created only if base
+                       # points to the middle of a segment
+REFINFO_SUBTRACT = 0x0100 # the reference value is subtracted from
+                          # the base value instead of (as usual)
+                          # being added to it
+REFINFO_SIGNEDOP = 0x0200 # the operand value is sign-extended (only
+                          # supported for REF_OFF8/16/32/64)
 """

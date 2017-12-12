@@ -2,7 +2,12 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 )
+
+type Custom struct {
+	hello string
+}
 
 func main() {
 	var c Custom
@@ -10,4 +15,6 @@ func main() {
 	c.hello = "Hello"
 
 	fmt.Println(c.hello)
+
+	fmt.Println(reflect.TypeOf(c))
 }
